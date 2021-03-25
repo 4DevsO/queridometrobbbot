@@ -21,6 +21,7 @@ import os
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 API_TOKEN = os.getenv('API_TOKEN')
+BOT_NAME = os.getenv('BOT_NAME')
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -74,7 +75,7 @@ def route_command(update, context):
     program = command[0]
     args = command[1:]
 
-    if program == "/criar":
+    if program == "/criar" or program == f"/criar@{BOT_NAME}":
         create_pool(update, context, args)
         return
 
