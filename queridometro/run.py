@@ -28,6 +28,17 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
+queridometro_options = [
+    "🐍",
+    "🤮",
+    "🙂",
+    "😡",
+    "💣",
+    "❤️",
+    "💔",
+    "🍌",
+    "🌱"
+]
 
 # Define a few command handlers. These usually take the two arguments update and
 # context. Error handlers also receive the raised TelegramError object in error.
@@ -45,6 +56,29 @@ def echo(update, context):
     """Echo the user message."""
     update.message.reply_text(update.message.text)
 
+def create_pool(update, context, args):
+    user_first_name = update.message.from_user.first_name
+
+    questionTitle = "Queridometro"
+
+    if len(args) > 0:
+        questionTitle = " ".join(args)
+    else:
+        questionTitle = user_first_name
+
+    context.bot.send_poll(chat_id=update.effective_chat.id, question=questionTitle, options=queridometro_options, disable_notification=True)
+
+def route_command(update, context):
+    command = update.message.text.split(" ")
+
+    program = command[0]
+    args = command[1:]
+
+    if program == "/criar":
+        create_pool(update, context, args)
+        return
+
+    echo(update, context)
 
 def error(update, context):
     """Log Errors caused by Updates."""
@@ -66,7 +100,8 @@ def main():
     dp.add_handler(CommandHandler("help", help))
 
     # on noncommand i.e message - echo the message on Telegram
-    dp.add_handler(MessageHandler(Filters.text, echo))
+
+    dp.add_handler(MessageHandler(Filters.text, route_command))
 
     # log all errors
     dp.add_error_handler(error)
