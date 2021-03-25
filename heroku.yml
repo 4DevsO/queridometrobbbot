@@ -2,4 +2,4 @@ build:
   docker:
     web: Dockerfile
 run:
-  web: pipenv run python ./queridometro/run.py
+  web: pipenv install && pipenv run python ./queridometro/run.py
